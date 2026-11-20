@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUAN MODS - Gerador de Sensibilidade & DPI Real</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Rajdhani para estética Gamer -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        gamer: ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        ff: {
+                            dark: '#090D16',
+                            card: '#111827',
+                            surface: '#1E293B',
+                            crimson: '#DC2626',
+                            scarlet: '#EF4444',
+                            ruby: '#991B1B',
+                            bright: '#F87171'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090D16;
+            color: #F8FAFC;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(220, 38, 38, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(153, 27, 27, 0.10) 0%, transparent 40%);
+        }
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #DC2626, #F87171);
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.75);
+            border: 2px solid #fff;
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 999px;
+        }
+        .glow-border {
+            box-shadow: 0 0 24px rgba(220, 38, 38, 0.18);
+        }
+        /* Switch Toggle Customizado */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #EF4444;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background: linear-gradient(135deg, #991B1B, #EF4444);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-ff-crimson selection:text-white">
+
+    <!-- Navbar / Header -->
+    <header class="border-b border-slate-800/80 bg-ff-card/80 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-ff-ruby via-ff-crimson to-ff-scarlet flex items-center justify-center shadow-lg shadow-ff-crimson/30">
+                    <i class="fa-solid fa-crosshairs text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-gamer font-bold text-2xl tracking-wide leading-none text-white">
+                        KAUAN <span class="text-transparent bg-clip-text bg-gradient-to-r from-ff-scarlet to-rose-400">MODS</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 font-medium tracking-wider uppercase">Sensibilidades de Primeira • Precisão Real</p>
+                </div>
+            </div>
+            <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/25">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                Atualizado OB46+
+            </span>
+        </div>
+
+        <!-- Barra de Navegação por Abas -->
+        <div class="max-w-5xl mx-auto px-4 pb-3">
+            <nav class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-ff-dark/90 border border-slate-800/90" aria-label="Abas do aplicativo">
+                <button type="button" id="tabBtnSensi" onclick="switchTab('sensi')" class="tab-btn py-2.5 px-4 rounded-lg font-gamer font-bold text-base sm:text-lg uppercase tracking-wider flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-red-800 via-red-600 to-rose-500 text-white shadow-md shadow-red-600/25 cursor-pointer">
+                    <i class="fa-solid fa-crosshairs text-sm"></i>
+                    <span>Gerador de Sensi</span>
+                </button>
+                <button type="button" id="tabBtnBoost" onclick="switchTab('boost')" class="tab-btn py-2.5 px-4 rounded-lg font-gamer font-bold text-base sm:text-lg uppercase tracking-wider flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">
+                    <i class="fa-solid fa-bolt text-sm"></i>
+                    <span>Funções & Boost</span>
+                    <span id="activeBoostBadge" class="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ABA 1: GERADOR DE SENSI -->
+    <main id="tabPanelSensi" class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Configuration Inputs -->
+        <section class="lg:col-span-6 space-y-5">
+            <div class="bg-ff-card border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="font-gamer font-bold text-xl uppercase tracking-wide flex items-center gap-2 text-white">
+                        <i class="fa-solid fa-sliders text-ff-scarlet"></i>
+                        Parâmetros do Dispositivo
+                    </h2>
+                    <button type="button" onclick="resetForm()" class="text-xs text-slate-400 hover:text-ff-bright transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> Resetar
+                    </button>
+                </div>
+
+                <!-- 1. Marca / Sistema -->
+                <div class="mb-5">
+                    <label for="deviceBrand" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        1. Marca / Aparelho
+                    </label>
+                    <div class="relative">
+                        <select id="deviceBrand" onchange="handleBrandChange()" class="w-full bg-ff-surface border border-slate-700 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-ff-scarlet transition appearance-none cursor-pointer">
+                            <option value="samsung">Samsung (Galaxy A / S / M)</option>
+                            <option value="xiaomi">Xiaomi / Redmi / Poco</option>
+                            <option value="motorola">Motorola (Moto G / Edge)</option>
+                            <option value="iphone">iPhone / iPad (iOS - Sem DPI)</option>
+                            <option value="asus">Asus ROG Phone / Zenfone</option>
+                            <option value="realme">Realme / Oppo / Infinix</option>
+                            <option value="other">Outro Android</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                    </div>
+                    <p id="brandHint" class="text-[11px] text-slate-400 mt-1.5">
+                        Taxa de resposta de toque padrão calibrada para painéis Samsung.
+                    </p>
+                </div>
+
+                <!-- 2. Estilo de Jogo -->
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        2. Estilo de Puxada & Jogabilidade
+                    </label>
+                    <div class="grid grid-cols-2 gap-2.5" id="playstyleGrid">
+                        <button type="button" data-style="rush" onclick="selectPlaystyle('rush')" class="style-btn active-style text-left p-3 rounded-xl border border-ff-scarlet bg-ff-crimson/15 transition">
+                            <div class="font-bold text-sm text-white flex items-center justify-between">
+                                <span>Capa Rápido</span>
+                                <i class="fa-solid fa-bolt text-ff-bright text-xs"></i>
+                            </div>
+                            <span class="text-[11px] text-slate-300 block mt-0.5">Rush / 1x1 / SMG</span>
+                        </button>
+                        <button type="button" data-style="balanced" onclick="selectPlaystyle('balanced')" class="style-btn text-left p-3 rounded-xl border border-slate-700 bg-ff-surface/60 hover:border-slate-500 transition">
+                            <div class="font-bold text-sm text-white flex items-center justify-between">
+                                <span>Equilibrado</span>
+                                <i class="fa-solid fa-scale-balanced text-slate-400 text-xs"></i>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block mt-0.5">Rank / Camp / X-Treino</span>
+                        </button>
+                        <button type="button" data-style="precision" onclick="selectPlaystyle('precision')" class="style-btn text-left p-3 rounded-xl border border-slate-700 bg-ff-surface/60 hover:border-slate-500 transition">
+                            <div class="font-bold text-sm text-white flex items-center justify-between">
+                                <span>Full Precisão</span>
+                                <i class="fa-solid fa-bullseye text-slate-400 text-xs"></i>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block mt-0.5">Não passa da cabeça</span>
+                        </button>
+                        <button type="button" data-style="scoped" onclick="selectPlaystyle('scoped')" class="style-btn text-left p-3 rounded-xl border border-slate-700 bg-ff-surface/60 hover:border-slate-500 transition">
+                            <div class="font-bold text-sm text-white flex items-center justify-between">
+                                <span>Mira Aberta</span>
+                                <i class="fa-solid fa-binoculars text-slate-400 text-xs"></i>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block mt-0.5">Foco 2x / 4x / Suporte</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. DPI Específica -->
+                <div class="mb-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="dpiInput" class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            3. DPI Específica (Largura Mínima)
+                        </label>
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="noDpiToggle" onchange="toggleNoDpi()" class="w-4 h-4 rounded accent-red-600 cursor-pointer">
+                            <span class="text-xs text-slate-300 font-medium">Sem DPI / iOS</span>
+                        </label>
+                    </div>
+                    
+                    <div id="dpiControls">
+                        <div class="relative flex items-center">
+                            <input type="number" id="dpiInput" value="580" min="320" max="1440" step="1" 
+                                class="w-full bg-ff-surface border border-slate-700 text-white font-gamer font-bold text-lg rounded-xl px-4 py-2.5 focus:outline-none focus:border-ff-scarlet transition"
+                                placeholder="Ex: 580">
+                            <span class="absolute right-4 text-xs font-bold text-slate-400 uppercase">DPI</span>
+                        </div>
+                        <!-- Presets rápidos de DPI -->
+                        <div class="flex flex-wrap gap-2 mt-2.5">
+                            <button type="button" onclick="setDpi(411)" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-red-950/70 hover:border-red-700/60 text-slate-300 border border-slate-700 transition">Padrão (411)</button>
+                            <button type="button" onclick="setDpi(580)" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-red-950/70 hover:border-red-700/60 text-slate-300 border border-slate-700 transition">Média (580)</button>
+                            <button type="button" onclick="setDpi(720)" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-red-950/70 hover:border-red-700/60 text-slate-300 border border-slate-700 transition">Alta (720)</button>
+                            <button type="button" onclick="setDpi(860)" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-red-950/70 hover:border-red-700/60 text-slate-300 border border-slate-700 transition">Extrema (860)</button>
+                        </div>
+                    </div>
+                    <div id="noDpiNotice" class="hidden p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs text-slate-300">
+                        <i class="fa-solid fa-mobile-screen text-ff-scarlet mr-1.5"></i>
+                        Modo <strong>DPI Nativa / Cursor iOS</strong> ativado. A sensibilidade será compensada automaticamente no jogo.
+                    </div>
+                </div>
+
+                <!-- 4. Tamanho do Botão de Atirar -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="buttonSize" class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            4. Tamanho do Botão de Atirar
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="suggestIdealButton()" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-red-600/15 text-red-400 hover:bg-red-600/25 border border-red-500/30 transition">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Sugerir Ideal
+                            </button>
+                            <span id="buttonSizeDisplay" class="font-gamer font-bold text-xl text-ff-scarlet w-12 text-right">48%</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <input type="range" id="buttonSize" min="35" max="75" value="48" oninput="updateButtonPreview(this.value)" class="w-full">
+                        <!-- Visualizador Real do Botão -->
+                        <div class="w-14 h-14 rounded-xl bg-ff-surface border border-slate-700 flex items-center justify-center shrink-0 relative overflow-hidden" title="Prévia visual do tamanho do botão">
+                            <div id="visualFireBtn" class="rounded-full border-2 border-ff-scarlet bg-red-600/25 flex items-center justify-center transition-all duration-150" style="width: 28px; height: 28px;">
+                                <i class="fa-solid fa-fire text-rose-300 text-[10px]"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                        <span>35% (Puxada Curta/Rápida)</span>
+                        <span>55% (Padrão)</span>
+                        <span>75% (Puxada Firme)</span>
+                    </div>
+                </div>
+
+                <!-- Botão Principal Gerar -->
+                <button type="button" onclick="generateSensitivity(true)" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-red-800 via-red-600 to-rose-500 hover:from-red-700 hover:via-red-500 hover:to-rose-400 text-white font-gamer font-bold text-xl uppercase tracking-wider shadow-lg shadow-red-600/30 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    Gerar Sensibilidade Calibrada
+                </button>
+            </div>
+        </section>
+
+        <!-- Right Column: Results & Fine Tuning -->
+        <section class="lg:col-span-6 space-y-5">
+            <div id="resultCard" class="bg-ff-card border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl glow-border relative overflow-hidden">
+                
+                <!-- Header do Resultado -->
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-5 pb-4 border-b border-slate-800">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-ff-scarlet">Configuração Gerada</span>
+                        <h2 id="resultTitle" class="font-gamer font-bold text-2xl text-white">Samsung • DPI 580 • Botão 48%</h2>
+                    </div>
+                    <button type="button" onclick="copyConfiguration()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-red-950/60 hover:border-red-700/60 text-white text-xs font-semibold border border-slate-700 transition flex items-center gap-2 cursor-pointer">
+                        <i class="fa-regular fa-copy text-ff-scarlet"></i>
+                        Copiar Tudo
+                    </button>
+                </div>
+
+                <!-- Sliders / Barras de Sensibilidade (Escala 0-200) -->
+                <div class="space-y-4 mb-6" id="sensiBarsContainer">
+                    <!-- Injetado via JS -->
+                </div>
+
+                <!-- Resumo Técnico + Dica de Puxada -->
+                <div class="bg-ff-surface/80 border border-slate-700/80 rounded-xl p-4 mb-5">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-red-600/20 text-ff-scarlet flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-ff-bright mb-1">Técnica de Puxada Recomendada</h3>
+                            <p id="techniqueTip" class="text-xs text-slate-300 leading-relaxed">
+                                Com DPI 580 e botão em 48%, faça uma puxada reta e rápida até a altura do ombro do boneco. Evite arrastar até o topo da tela.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calibragem em Tempo Real (Ajuste Fino) -->
+                <div class="border-t border-slate-800 pt-4">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                            <i class="fa-solid fa-wrench text-ff-scarlet mr-1"></i> Ajuste Fino (Testando no Treinamento?)
+                        </span>
+                        <span id="fineTuneBadge" class="text-[11px] font-mono text-slate-400">Offset: 0</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button type="button" onclick="applyFineTune(-5)" class="p-2.5 rounded-xl bg-red-950/50 hover:bg-red-900/50 border border-red-800/60 text-left transition flex items-center gap-2.5 cursor-pointer">
+                            <i class="fa-solid fa-arrow-down text-red-400"></i>
+                            <div>
+                                <div class="text-xs font-bold text-red-200">Passando da cabeça</div>
+                                <div class="text-[10px] text-slate-400">Reduzir Geral/Red Dot (-5)</div>
+                            </div>
+                        </button>
+                        <button type="button" onclick="applyFineTune(5)" class="p-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-left transition flex items-center gap-2.5 cursor-pointer">
+                            <i class="fa-solid fa-arrow-up text-emerald-400"></i>
+                            <div>
+                                <div class="text-xs font-bold text-emerald-200">Grudando no peito</div>
+                                <div class="text-[10px] text-slate-400">Aumentar Geral/Red Dot (+5)</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ABA 2: FUNÇÕES & BOOST -->
+    <section id="tabPanelBoost" class="hidden flex-grow max-w-5xl w-full mx-auto px-4 py-6 sm:py-8 space-y-6">
+        
+        <!-- Painel Superior: Game Booster (Foco em FPS) -->
+        <div class="bg-ff-card border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl glow-border relative overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+                <div class="flex items-start sm:items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-900 via-red-600 to-rose-500 flex items-center justify-center shadow-lg shadow-red-600/30 shrink-0">
+                        <i class="fa-solid fa-gauge-high text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h2 class="font-gamer font-bold text-2xl uppercase tracking-wide text-white">Game Booster • Foco em FPS</h2>
+                            <span id="fpsStatusPill" class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                                Modo Padrão
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5">Libera memória RAM em segundo plano, prioriza CPU/GPU e estabiliza a taxa de quadros.</p>
+                    </div>
+                </div>
+
+                <button type="button" id="runBoosterBtn" onclick="runGameBooster()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-red-800 via-red-600 to-rose-500 hover:from-red-700 hover:via-red-500 hover:to-rose-400 text-white font-gamer font-bold text-lg uppercase tracking-wider shadow-lg shadow-red-600/30 active:scale-[0.99] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+                    <i class="fa-solid fa-rocket"></i>
+                    <span>Otimizar Agora</span>
+                </button>
+            </div>
+
+            <!-- Barra de Progresso e Métricas do Booster -->
+            <div class="mt-5 space-y-4">
+                <div>
+                    <div class="flex justify-between text-xs font-semibold mb-1.5">
+                        <span id="boosterTaskLabel" class="text-slate-300">Pronto para otimizar recursos do sistema</span>
+                        <span id="boosterPercentLabel" class="font-mono text-ff-scarlet">0%</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5">
+                        <div id="boosterProgressBar" class="h-full rounded-full bg-gradient-to-r from-red-800 via-red-600 to-rose-400 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Indicadores Rápidos -->
+                <div class="grid grid-cols-3 gap-3 pt-1">
+                    <div class="bg-ff-surface/70 border border-slate-700/70 rounded-xl p-3 text-center">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Estabilidade FPS</span>
+                        <span id="metricFps" class="font-gamer font-bold text-xl text-white">60 FPS</span>
+                    </div>
+                    <div class="bg-ff-surface/70 border border-slate-700/70 rounded-xl p-3 text-center">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Memória Livre</span>
+                        <span id="metricRam" class="font-gamer font-bold text-xl text-ff-bright">Padrão</span>
+                    </div>
+                    <div class="bg-ff-surface/70 border border-slate-700/70 rounded-xl p-3 text-center">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Resposta Rede</span>
+                        <span id="metricPing" class="font-gamer font-bold text-xl text-white">Normal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Funções Específicas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- 1. Mira Leve -->
+            <div id="card-miraLeve" class="boost-card bg-ff-card border border-slate-800 rounded-2xl p-5 transition-all">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-600/15 border border-red-500/30 text-ff-scarlet flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-gamer font-bold text-xl text-white leading-tight">Mira Leve (Estabilizador)</h3>
+                            <span id="status-miraLeve" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-400 mt-1">Desativado</span>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" id="toggle-miraLeve" onchange="toggleBoostFeature('miraLeve')" class="sr-only peer">
+                        <div class="w-12 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-700 peer-checked:to-rose-500"></div>
+                    </label>
+                </div>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Suaviza micro-tremidas durante a puxada vertical, deixando o deslize do polegar mais fluido e leve para encaixar capa.
+                </p>
+                <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Nível de suavização:</span>
+                    <select id="level-miraLeve" onchange="updateFeatureNote()" class="bg-ff-surface border border-slate-700 text-white rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:border-ff-scarlet">
+                        <option value="Leve (15%)">Leve (15%)</option>
+                        <option value="Médio (30%)" selected>Médio (30%)</option>
+                        <option value="Máximo (45%)">Máximo (45%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 2. Boneco Lento / Controle Pesado -->
+            <div id="card-bonecoLento" class="boost-card bg-ff-card border border-slate-800 rounded-2xl p-5 transition-all">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-600/15 border border-red-500/30 text-ff-scarlet flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-weight-hanging"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-gamer font-bold text-xl text-white leading-tight">Boneco Lento / Controle Pesado</h3>
+                            <span id="status-bonecoLento" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-400 mt-1">Desativado</span>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" id="toggle-bonecoLento" onchange="toggleBoostFeature('bonecoLento')" class="sr-only peer">
+                        <div class="w-12 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-700 peer-checked:to-rose-500"></div>
+                    </label>
+                </div>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Reduz o deslize excessivo do analógico e estabiliza o eixo horizontal para movimentação firme e capa parado sem pinar.
+                </p>
+                <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Firmeza do analógico:</span>
+                    <select id="level-bonecoLento" onchange="updateFeatureNote()" class="bg-ff-surface border border-slate-700 text-white rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:border-ff-scarlet">
+                        <option value="Equilibrado">Equilibrado</option>
+                        <option value="Firme (X-Treino)" selected>Firme (X-Treino)</option>
+                        <option value="Pesado (1x1)">Pesado (1x1)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 3. Resposta de Toque Ultra -->
+            <div id="card-touchUltra" class="boost-card bg-ff-card border border-slate-800 rounded-2xl p-5 transition-all">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-600/15 border border-red-500/30 text-ff-scarlet flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-fingerprint"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-gamer font-bold text-xl text-white leading-tight">Resposta de Toque Ultra</h3>
+                            <span id="status-touchUltra" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-400 mt-1">Desativado</span>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" id="toggle-touchUltra" onchange="toggleBoostFeature('touchUltra')" class="sr-only peer">
+                        <div class="w-12 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-700 peer-checked:to-rose-500"></div>
+                    </label>
+                </div>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Otimiza a amostragem de toque (120Hz/240Hz) para leitura imediata do primeiro milímetro ao tocar na tela.
+                </p>
+                <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Taxa alvo:</span>
+                    <span class="font-mono font-bold text-ff-bright">240Hz Touch Sampling</span>
+                </div>
+            </div>
+
+            <!-- 4. Redutor de Delay de Disparo -->
+            <div id="card-delayDisparo" class="boost-card bg-ff-card border border-slate-800 rounded-2xl p-5 transition-all">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-600/15 border border-red-500/30 text-ff-scarlet flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-gamer font-bold text-xl text-white leading-tight">Redutor de Delay de Disparo</h3>
+                            <span id="status-delayDisparo" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-400 mt-1">Desativado</span>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" id="toggle-delayDisparo" onchange="toggleBoostFeature('delayDisparo')" class="sr-only peer">
+                        <div class="w-12 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-700 peer-checked:to-rose-500"></div>
+                    </label>
+                </div>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Calibra o tempo de resposta da zona do botão de atirar para disparos instantâneos de Desert Eagle, M1014 e Carapina.
+                </p>
+                <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Latência estimada:</span>
+                    <span class="font-mono font-bold text-ff-bright">-18ms na zona de tiro</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rodapé da Aba Boost: Resumo & Aplicar Perfil -->
+        <div class="bg-ff-card border border-slate-800 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+            <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-ff-scarlet block">Resumo do Perfil Ativo</span>
+                <p id="boostSummaryText" class="text-xs sm:text-sm text-slate-300 mt-0.5">
+                    Nenhuma função auxiliar ativada no momento. Selecione acima para montar seu perfil.
+                </p>
+            </div>
+            <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                <button type="button" onclick="resetBoostFeatures()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition cursor-pointer">
+                    Limpar
+                </button>
+                <button type="button" onclick="applyBoostProfile()" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-800 via-red-600 to-rose-500 hover:from-red-700 hover:via-red-500 hover:to-rose-400 text-white font-gamer font-bold text-base uppercase tracking-wider shadow-lg shadow-red-600/25 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span>Aplicar & Salvar Perfil</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 left-5 sm:left-auto bg-slate-900 border border-ff-scarlet text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50">
+        <div class="w-7 h-7 rounded-full bg-red-600/20 text-ff-scarlet flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toastMessage" class="text-sm font-medium">Sensibilidade copiada para a área de transferência!</span>
+    </div>
+
+    <script>
+        // Estado Global da Aplicação
+        let currentPlaystyle = 'rush';
+        let fineTuneOffset = 0;
+        let currentGeneratedData = null;
+
+        // Estado das Funções & Boost
+        const boostState = {
+            miraLeve: false,
+            bonecoLento: false,
+            touchUltra: false,
+            delayDisparo: false,
+            fpsBoosted: false
+        };
+
+        // Alternância entre Abas
+        function switchTab(tabName) {
+            const sensiPanel = document.getElementById('tabPanelSensi');
+            const boostPanel = document.getElementById('tabPanelBoost');
+            const btnSensi = document.getElementById('tabBtnSensi');
+            const btnBoost = document.getElementById('tabBtnBoost');
+
+            const activeClasses = ['bg-gradient-to-r', 'from-red-800', 'via-red-600', 'to-rose-500', 'text-white', 'shadow-md', 'shadow-red-600/25'];
+            const inactiveClasses = ['text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60'];
+
+            if (tabName === 'sensi') {
+                sensiPanel.classList.remove('hidden');
+                boostPanel.classList.add('hidden');
+                btnSensi.classList.add(...activeClasses);
+                btnSensi.classList.remove(...inactiveClasses);
+                btnBoost.classList.remove(...activeClasses);
+                btnBoost.classList.add(...inactiveClasses);
+            } else {
+                sensiPanel.classList.add('hidden');
+                boostPanel.classList.remove('hidden');
+                btnBoost.classList.add(...activeClasses);
+                btnBoost.classList.remove(...inactiveClasses);
+                btnSensi.classList.remove(...activeClasses);
+                btnSensi.classList.add(...inactiveClasses);
+            }
+        }
+
+        // Alterna cada função individual da Aba 2
+        function toggleBoostFeature(featureKey) {
+            const isChecked = document.getElementById(`toggle-${featureKey}`).checked;
+            boostState[featureKey] = isChecked;
+
+            const card = document.getElementById(`card-${featureKey}`);
+            const badge = document.getElementById(`status-${featureKey}`);
+
+            if (isChecked) {
+                card.classList.remove('border-slate-800');
+                card.classList.add('border-ff-scarlet', 'bg-red-950/15');
+                badge.textContent = 'Ativado';
+                badge.classList.remove('bg-slate-800', 'text-slate-400');
+                badge.classList.add('bg-red-600/25', 'text-red-300', 'border', 'border-red-500/40');
+            } else {
+                card.classList.add('border-slate-800');
+                card.classList.remove('border-ff-scarlet', 'bg-red-950/15');
+                badge.textContent = 'Desativado';
+                badge.classList.add('bg-slate-800', 'text-slate-400');
+                badge.classList.remove('bg-red-600/25', 'text-red-300', 'border', 'border-red-500/40');
+            }
+
+            updateBoostSummary();
+        }
+
+        function updateFeatureNote() {
+            updateBoostSummary();
+        }
+
+        // Atualiza contador na aba e texto de resumo
+        function updateBoostSummary() {
+            const activeNames = [];
+            if (boostState.miraLeve) {
+                const lvl = document.getElementById('level-miraLeve').value;
+                activeNames.push(`Mira Leve (${lvl})`);
+            }
+            if (boostState.bonecoLento) {
+                const lvl = document.getElementById('level-bonecoLento').value;
+                activeNames.push(`Boneco Lento (${lvl})`);
+            }
+            if (boostState.touchUltra) activeNames.push('Toque Ultra 240Hz');
+            if (boostState.delayDisparo) activeNames.push('Redutor Delay');
+            if (boostState.fpsBoosted) activeNames.push('Game Booster FPS');
+
+            document.getElementById('activeBoostBadge').textContent = activeNames.length;
+
+            const summaryEl = document.getElementById('boostSummaryText');
+            if (activeNames.length === 0) {
+                summaryEl.textContent = 'Nenhuma função auxiliar ativada no momento. Selecione acima para montar seu perfil.';
+            } else {
+                summaryEl.innerHTML = `<span class="text-white font-semibold">${activeNames.length} ativo(s):</span> ${activeNames.join(' • ')}`;
+            }
+        }
+
+        // Simulação visual interativa do Game Booster
+        let boosterInterval = null;
+        function runGameBooster() {
+            if (boosterInterval) return;
+
+            const btn = document.getElementById('runBoosterBtn');
+            const bar = document.getElementById('boosterProgressBar');
+            const pctLabel = document.getElementById('boosterPercentLabel');
+            const taskLabel = document.getElementById('boosterTaskLabel');
+            const statusPill = document.getElementById('fpsStatusPill');
+
+            btn.disabled = true;
+            btn.classList.add('opacity-75');
+            let progress = 0;
+
+            const steps = [
+                { at: 15, text: 'Limpando processos em segundo plano...' },
+                { at: 45, text: 'Priorizando threads de CPU/GPU para o Free Fire...' },
+                { at: 75, text: 'Calibrando taxa de resposta de toque e rede...' },
+                { at: 95, text: 'Finalizando estabilização de quadros...' }
+            ];
+
+            boosterInterval = setInterval(() => {
+                progress += 5;
+                bar.style.width = progress + '%';
+                pctLabel.textContent = progress + '%';
+
+                const currentStep = steps.find(s => progress <= s.at);
+                if (currentStep) taskLabel.textContent = currentStep.text;
+
+                if (progress >= 100) {
+                    clearInterval(boosterInterval);
+                    boosterInterval = null;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-75');
+
+                    boostState.fpsBoosted = true;
+                    taskLabel.textContent = 'Sistema otimizado! Pronto para abrir o Free Fire.';
+                    statusPill.textContent = 'Otimizado • FPS Estável';
+                    statusPill.className = 'text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-red-600/20 text-red-400 border border-red-500/40';
+
+                    document.getElementById('metricFps').textContent = '90 / 120 FPS';
+                    document.getElementById('metricFps').className = 'font-gamer font-bold text-xl text-ff-scarlet';
+                    document.getElementById('metricRam').textContent = '+1.4 GB Livre';
+                    document.getElementById('metricPing').textContent = 'Estabilizado';
+                    document.getElementById('metricPing').className = 'font-gamer font-bold text-xl text-emerald-400';
+
+                    updateBoostSummary();
+                    showToast('Game Booster concluído! Memória liberada e FPS priorizado.');
+                }
+            }, 65);
+        }
+
+        // Aplica e salva perfil da Aba 2
+        function applyBoostProfile() {
+            updateBoostSummary();
+            const count = parseInt(document.getElementById('activeBoostBadge').textContent, 10);
+            if (count === 0) {
+                showToast('Ative pelo menos uma função antes de salvar o perfil.');
+                return;
+            }
+            showToast(`Perfil com ${count} otimização(ões) aplicado e salvo com sucesso!`);
+        }
+
+        // Reseta funções da Aba 2
+        function resetBoostFeatures() {
+            ['miraLeve', 'bonecoLento', 'touchUltra', 'delayDisparo'].forEach(key => {
+                const checkbox = document.getElementById(`toggle-${key}`);
+                checkbox.checked = false;
+                toggleBoostFeature(key);
+            });
+            boostState.fpsBoosted = false;
+            document.getElementById('boosterProgressBar').style.width = '0%';
+            document.getElementById('boosterPercentLabel').textContent = '0%';
+            document.getElementById('boosterTaskLabel').textContent = 'Pronto para otimizar recursos do sistema';
+            document.getElementById('fpsStatusPill').textContent = 'Modo Padrão';
+            document.getElementById('fpsStatusPill').className = 'text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700';
+            document.getElementById('metricFps').textContent = '60 FPS';
+            document.getElementById('metricFps').className = 'font-gamer font-bold text-xl text-white';
+            document.getElementById('metricRam').textContent = 'Padrão';
+            document.getElementById('metricPing').textContent = 'Normal';
+            document.getElementById('metricPing').className = 'font-gamer font-bold text-xl text-white';
+            updateBoostSummary();
+            showToast('Funções e Booster restaurados para o padrão.');
+        }
+
+        // Perfis de Hardware (Multiplicador de resposta de toque de tela)
+        const brandProfiles = {
+            samsung: {
+                name: 'Samsung',
+                touchFactor: 1.00,
+                hint: 'Taxa de resposta de toque padrão calibrada para painéis Samsung (60Hz–120Hz).',
+                idealBtn: 48
+            },
+            xiaomi: {
+                name: 'Xiaomi/Poco',
+                touchFactor: 0.96, // Touch sampling alto (240Hz-480Hz) responde mais rápido
+                hint: 'Painéis Xiaomi/Poco possuem alta taxa de amostragem de toque; leve redução aplicada para estabilidade.',
+                idealBtn: 46
+            },
+            motorola: {
+                name: 'Motorola',
+                touchFactor: 1.03,
+                hint: 'Compensação leve aplicada para suavizar a curva de aceleração nativa da Motorola.',
+                idealBtn: 50
+            },
+            iphone: {
+                name: 'iPhone (iOS)',
+                touchFactor: 0.92, // iOS tem aceleração de toque nativa muito alta
+                hint: 'iOS não usa DPI tradicional. Ajuste baseado no Cursor Móvel (Refinado/Individual).',
+                idealBtn: 45
+            },
+            asus: {
+                name: 'Asus ROG',
+                touchFactor: 0.94,
+                hint: 'Calibrado para telas gamer de ultra-resposta (AirTriggers / 144Hz+).',
+                idealBtn: 46
+            },
+            realme: {
+                name: 'Realme/Oppo',
+                touchFactor: 0.98,
+                hint: 'Curva otimizada para telas AMOLED/IPS da linha Realme e Oppo.',
+                idealBtn: 48
+            },
+            other: {
+                name: 'Android',
+                touchFactor: 1.01,
+                hint: 'Curva universal balanceada para dispositivos Android em geral.',
+                idealBtn: 50
+            }
+        };
+
+        // Multiplicadores por Estilo de Jogo
+        const playstyleModifiers = {
+            rush: {
+                geral: 1.06,
+                redDot: 1.04,
+                mira2x: 1.02,
+                mira4x: 0.98,
+                awm: 0.85,
+                olhadinha: 1.10
+            },
+            balanced: {
+                geral: 1.00,
+                redDot: 1.00,
+                mira2x: 1.00,
+                mira4x: 1.00,
+                awm: 0.90,
+                olhadinha: 1.00
+            },
+            precision: {
+                geral: 0.91,
+                redDot: 0.90,
+                mira2x: 0.93,
+                mira4x: 0.94,
+                awm: 0.80,
+                olhadinha: 0.95
+            },
+            scoped: {
+                geral: 0.96,
+                redDot: 0.98,
+                mira2x: 1.08,
+                mira4x: 1.10,
+                awm: 0.95,
+                olhadinha: 1.00
+            }
+        };
+
+        // Limita valores entre min e max
+        function clamp(val, min, max) {
+            return Math.max(min, Math.min(max, Math.round(val)));
+        }
+
+        // Atualiza UI ao trocar marca
+        function handleBrandChange() {
+            const brandKey = document.getElementById('deviceBrand').value;
+            const profile = brandProfiles[brandKey];
+            document.getElementById('brandHint').textContent = profile.hint;
+
+            const noDpiCheckbox = document.getElementById('noDpiToggle');
+            if (brandKey === 'iphone') {
+                noDpiCheckbox.checked = true;
+                toggleNoDpi();
+            } else if (noDpiCheckbox.checked && brandKey !== 'iphone') {
+                noDpiCheckbox.checked = false;
+                toggleNoDpi();
+            }
+            fineTuneOffset = 0;
+            generateSensitivity(false);
+        }
+
+        // Alterna modo Sem DPI / iOS
+        function toggleNoDpi() {
+            const isNoDpi = document.getElementById('noDpiToggle').checked;
+            const dpiControls = document.getElementById('dpiControls');
+            const noDpiNotice = document.getElementById('noDpiNotice');
+
+            if (isNoDpi) {
+                dpiControls.classList.add('hidden');
+                noDpiNotice.classList.remove('hidden');
+            } else {
+                dpiControls.classList.remove('hidden');
+                noDpiNotice.classList.add('hidden');
+            }
+            fineTuneOffset = 0;
+            generateSensitivity(false);
+        }
+
+        // Define DPI pelos botões rápidos
+        function setDpi(value) {
+            document.getElementById('noDpiToggle').checked = false;
+            toggleNoDpi();
+            document.getElementById('dpiInput').value = value;
+            fineTuneOffset = 0;
+            generateSensitivity(false);
+        }
+
+        // Seleciona estilo de jogo
+        function selectPlaystyle(style) {
+            currentPlaystyle = style;
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                if (btn.dataset.style === style) {
+                    btn.classList.remove('border-slate-700', 'bg-ff-surface/60');
+                    btn.classList.add('border-ff-scarlet', 'bg-ff-crimson/15');
+                } else {
+                    btn.classList.add('border-slate-700', 'bg-ff-surface/60');
+                    btn.classList.remove('border-ff-scarlet', 'bg-ff-crimson/15');
+                }
+            });
+            fineTuneOffset = 0;
+            generateSensitivity(false);
+        }
+
+        // Atualiza visualização do botão de atirar
+        function updateButtonPreview(val) {
+            document.getElementById('buttonSizeDisplay').textContent = val + '%';
+            const visualBtn = document.getElementById('visualFireBtn');
+            // Mapeia 35-75% para 20px-44px na caixa de prévia
+            const pxSize = Math.round(20 + ((val - 35) / 40) * 24);
+            visualBtn.style.width = pxSize + 'px';
+            visualBtn.style.height = pxSize + 'px';
+        }
+
+        // Sugere tamanho de botão ideal baseado na marca e estilo
+        function suggestIdealButton() {
+            const brandKey = document.getElementById('deviceBrand').value;
+            let ideal = brandProfiles[brandKey].idealBtn;
+
+            if (currentPlaystyle === 'rush') ideal -= 3;
+            if (currentPlaystyle === 'precision') ideal += 4;
+            if (currentPlaystyle === 'scoped') ideal += 2;
+
+            ideal = clamp(ideal, 38, 65);
+            const slider = document.getElementById('buttonSize');
+            slider.value = ideal;
+            updateButtonPreview(ideal);
+            fineTuneOffset = 0;
+            generateSensitivity(false);
+            showToast(`Botão ideal ajustado para ${ideal}%!`);
+        }
+
+        // Ajuste fino (+/-)
+        function applyFineTune(delta) {
+            fineTuneOffset = clamp(fineTuneOffset + delta, -25, 25);
+            generateSensitivity(false);
+            const msg = delta < 0 
+                ? 'Mira estabilizada! Sensibilidade reduzida para não passar da cabeça.' 
+                : 'Puxada mais leve! Sensibilidade aumentada para subir capa fácil.';
+            showToast(msg);
+        }
+
+        // Algoritmo Principal de Cálculo Real de Sensibilidade (Escala 0-200)
+        function generateSensitivity(showFeedback = true) {
+            const brandKey = document.getElementById('deviceBrand').value;
+            const brand = brandProfiles[brandKey];
+            const isNoDpi = document.getElementById('noDpiToggle').checked;
+            let dpi = parseInt(document.getElementById('dpiInput').value, 10);
+
+            if (isNaN(dpi) || dpi < 320) dpi = 411;
+            if (dpi > 1440) dpi = 1440;
+
+            const buttonSize = parseInt(document.getElementById('buttonSize').value, 10);
+            const styleMod = playstyleModifiers[currentPlaystyle];
+
+            // 1. Fator DPI (Relação Inversa Real):
+            // Base de referência: 411 DPI equivale a ~186 na Geral (escala 0-200).
+            // Conforme DPI sobe (ex: 600, 800), a velocidade de pixel aumenta, exigindo redução controlada.
+            const effectiveDpi = isNoDpi ? 400 : dpi;
+            // Curva logarítmica/inversa suavizada para manter jogabilidade em qualquer DPI
+            const dpiRatio = Math.pow(411 / effectiveDpi, 0.34);
+
+            // 2. Fator Tamanho do Botão:
+            // Botão padrão = 50%. Botões menores (ex: 40%) geram arraste mais rápido -> precisam de leve redução (-0.35% por ponto).
+            // Botões maiores (ex: 65%) têm menos curso livre -> precisam de leve aumento (+0.35% por ponto).
+            const buttonFactor = 1 + ((buttonSize - 50) * 0.0038);
+
+            // 3. Base na nova escala 0 - 200 do Free Fire
+            const baseGeral = 188 * dpiRatio * brand.touchFactor * buttonFactor;
+
+            const sensi = {
+                geral: clamp((baseGeral * styleMod.geral) + fineTuneOffset, 60, 200),
+                redDot: clamp((baseGeral * 0.96 * styleMod.redDot) + fineTuneOffset, 55, 200),
+                mira2x: clamp((baseGeral * 0.93 * styleMod.mira2x) + Math.round(fineTuneOffset * 0.8), 50, 200),
+                mira4x: clamp((baseGeral * 0.89 * styleMod.mira4x) + Math.round(fineTuneOffset * 0.8), 45, 200),
+                awm: clamp((115 * dpiRatio * styleMod.awm), 20, 180),
+                olhadinha: clamp((155 * styleMod.olhadinha), 50, 200)
+            };
+
+            currentGeneratedData = {
+                brandName: brand.name,
+                dpiText: isNoDpi ? 'Nativa / iOS' : `${dpi} DPI`,
+                buttonSize: buttonSize,
+                sensi: sensi
+            };
+
+            renderResults();
+
+            if (showFeedback) {
+                const card = document.getElementById('resultCard');
+                card.classList.add('ring-2', 'ring-ff-scarlet');
+                setTimeout(() => card.classList.remove('ring-2', 'ring-ff-scarlet'), 400);
+                showToast('Sensibilidade gerada e calibrada com sucesso!');
+            }
+        }
+
+        // Renderiza as barras e dicas na tela
+        function renderResults() {
+            const { brandName, dpiText, buttonSize, sensi } = currentGeneratedData;
+
+            document.getElementById('resultTitle').textContent = `${brandName} • ${dpiText} • Botão ${buttonSize}%`;
+            document.getElementById('fineTuneBadge').textContent = `Ajuste Fino: ${fineTuneOffset > 0 ? '+' + fineTuneOffset : fineTuneOffset}`;
+
+            const items = [
+                { label: 'Geral', value: sensi.geral, icon: 'fa-person-running', color: 'from-red-800 via-red-600 to-rose-500' },
+                { label: 'Ponto Vermelho (Red Dot)', value: sensi.redDot, icon: 'fa-circle-dot', color: 'from-red-700 to-red-400' },
+                { label: 'Mira 2x', value: sensi.mira2x, icon: 'fa-magnifying-glass-plus', color: 'from-rose-700 to-rose-400' },
+                { label: 'Mira 4x', value: sensi.mira4x, icon: 'fa-crosshairs', color: 'from-red-800 to-rose-400' },
+                { label: 'Mira AWM / Sniper', value: sensi.awm, icon: 'fa-bullseye', color: 'from-red-950 via-red-700 to-red-500' },
+                { label: 'Olhadinha', value: sensi.olhadinha, icon: 'fa-eye', color: 'from-rose-900 to-rose-500' }
+            ];
+
+            const container = document.getElementById('sensiBarsContainer');
+            container.innerHTML = items.map(item => {
+                const pct = Math.round((item.value / 200) * 100);
+                return `
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-1.5">
+                            <span class="font-medium text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid ${item.icon} text-slate-400 w-4 text-center text-xs"></i>
+                                ${item.label}
+                            </span>
+                            <span class="font-gamer font-bold text-xl text-white bg-ff-surface px-2.5 py-0.5 rounded-lg border border-slate-700/80">
+                                ${item.value}
+                            </span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5">
+                            <div class="h-full rounded-full bg-gradient-to-r ${item.color} transition-all duration-300" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Dica dinâmica de técnica de puxada
+            let tip = '';
+            if (buttonSize <= 44) {
+                tip = `Botão compacto (${buttonSize}%): Faça uma puxada curta e explosiva ("puxada em J" ou reta rápida) parando na linha do pescoço. Ideal para 1 tiro de Desert/Doze e SMG de perto.`;
+            } else if (buttonSize <= 54) {
+                tip = `Botão equilibrado (${buttonSize}%): Arraste o dedo de forma contínua e firme até a altura da cabeça do oponente. Excelente estabilidade para segurar dedo de AR (Scar/M4A1) e subidas de SMG.`;
+            } else {
+                tip = `Botão grande (${buttonSize}%): Como a área de toque é ampla, use uma puxada longa e constante com a ponta do polegar para compensar o curso reduzido até a borda inferior.`;
+            }
+            document.getElementById('techniqueTip').textContent = tip;
+        }
+
+        // Copiar configuração formatada (usando fallback compatível com iframe)
+        function copyConfiguration() {
+            if (!currentGeneratedData) return;
+            const { brandName, dpiText, buttonSize, sensi } = currentGeneratedData;
+
+            const text = 
+`🔥 *SENSI FF PRO (Escala 0-200)* 🔥
+📱 Aparelho: ${brandName}
+⚙️ DPI: ${dpiText}
+🔘 Botão de Atirar: ${buttonSize}%
+
+🎯 *SENSIBILIDADE NO JOGO:*
+• Geral: ${sensi.geral}
+• Ponto Vermelho: ${sensi.redDot}
+• Mira 2x: ${sensi.mira2x}
+• Mira 4x: ${sensi.mira4x}
+• Mira AWM: ${sensi.awm}
+• Olhadinha: ${sensi.olhadinha}`;
+
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Configuração copiada! Cole no seu bloco de notas ou WhatsApp.');
+            } catch (err) {
+                showToast('Não foi possível copiar automaticamente.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Resetar formulário
+        function resetForm() {
+            document.getElementById('deviceBrand').value = 'samsung';
+            document.getElementById('noDpiToggle').checked = false;
+            toggleNoDpi();
+            document.getElementById('dpiInput').value = 580;
+            document.getElementById('buttonSize').value = 48;
+            updateButtonPreview(48);
+            selectPlaystyle('rush');
+            fineTuneOffset = 0;
+            generateSensitivity(false);
+            showToast('Parâmetros restaurados para o padrão.');
+        }
+
+        // Exibe notificação Toast
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3200);
+        }
+
+        // Inicialização ao carregar a página
+        window.onload = function() {
+            updateButtonPreview(48);
+            generateSensitivity(false);
+        };
+    </script>
+</body>
+</html>
